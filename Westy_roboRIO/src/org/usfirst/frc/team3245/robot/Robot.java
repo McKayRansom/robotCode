@@ -6,45 +6,45 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Robot extends IterativeRobot {
 	//
-	static int leftStick = 2, rightStick = 4, fastBtn = 8, slowBtn = 7,
+	int leftStick = 2, rightStick = 4, fastBtn = 8, slowBtn = 7,
 			lowGearBtn = 5, highGearBtn = 6;
 
 	// Co Pilot Controls!
-	static int togCompBtn = 10, suckBtn = 7, shootBtn = 8, loadBtn = 6, spitBtn = 5,
+	int togCompBtn = 10, suckBtn = 7, shootBtn = 8, loadBtn = 6, spitBtn = 5,
 			floorOutBtn = 4, floorInBtn = 2, spdUpBtn = 3, spdDnBtn = 1;
 
-	
+	// Motors!
+	private Talon leftMotor1, leftMotor2, leftMotor3, rightMotor1, rightMotor2,
+			rightMotor3, shootMotor1, shootMotor2, floorMotor;
 	// Current Motor Speeds! 
 	private double leftSpeed, rightSpeed, shootSpeed1, shootSpeed2, floorSpeed;
 	private double shooterSpeed = 0.60;
 
 	// Controllers!
-	static int pilotStick = 0, coPilotStick = 1;
+	Joystick pilotStick, coPilotStick;
 
 	// Compressor!
 	Compressor mainComp;
 
 	// Solenoids!
-	static Solenoid driveHighSole;
-
-	static Solenoid driveLowSole;
-
-	Solenoid floorOutSole;
-
-	Solenoid floorInSole;
+	Solenoid driveHighSole, driveLowSole, floorOutSole, floorInSole;
 	Input inputHandler;
 	public void robotInit() {
 		// Motors!
 		inputHandler = new Input(2);
-//		rightMotor1 = new Talon(3);
-//		rightMotor2 = new Talon(4);
-//		rightMotor3 = new Talon(5);
-//		leftMotor1 = new Talon(0);
-//		leftMotor2 = new Talon(1);
-//		leftMotor3 = new Talon(2);
-//		shootMotor1 = new Talon(6);
-//		shootMotor2 = new Talon(7);
-//		floorMotor = new Talon(8);
+		rightMotor1 = new Talon(3);
+		rightMotor2 = new Talon(4);
+		rightMotor3 = new Talon(5);
+		leftMotor1 = new Talon(0);
+		leftMotor2 = new Talon(1);
+		leftMotor3 = new Talon(2);
+		shootMotor1 = new Talon(6);
+		shootMotor2 = new Talon(7);
+		floorMotor = new Talon(8);
+		
+		// Joysticks!
+		pilotStick = new Joystick(0);
+		coPilotStick = new Joystick(1);
 
 		// Compressor!
 		mainComp = new Compressor(0);
@@ -66,6 +66,16 @@ public class Robot extends IterativeRobot {
 	private int autoConfig = 3;
 	private boolean driveCopilot = false;
 
+	//public void disabledPeriodic() {
+		//if (autoButton1) {
+			//autoConfig = 1;
+		//} else if (autoButton2) {
+			//autoConfig = 2;
+		//} else if (autoButton3) {
+			//autoConfig = 3;
+		//}
+		//driveCopilot = autoButton4;
+	//}
 
 	private int autoCount = 0;
 
@@ -134,7 +144,7 @@ public class Robot extends IterativeRobot {
 
 	public void teleopPeriodic() {
 		mainComp.setClosedLoopControl(true);
-		input.cycleUpdate();
+		inputHandler.cycleUpdate();
 		updateTankDrive();
 		updateDriveShifter();
 		updateShooter();
@@ -143,13 +153,22 @@ public class Robot extends IterativeRobot {
 		updateMotors();
 	}
 
-	
-	
-	public void onButtonUp(int btn, int controller) {
-		if (btn == lowGearBtn) || (btn == )
+	public static void onButtonDown(int button, int controller) {
+		
 	}
-	public void testInit() {}
-	public void testPeriodic() {}
+	
+	public static void onButtonUp(int button, int controller) {
+		
+	}
+	
+	public void testInit() {
+
+	}
+
+	public void testPeriodic() {
+
+	}
+
 	// Custom Functions!
 	public void zeroMotorSpeeds() {
 		leftSpeed = 0.0;
@@ -160,7 +179,20 @@ public class Robot extends IterativeRobot {
 	}
 
 	public void updateTankDrive() {
-
+		
+		
+//		Input.cycleUpdate();
+//		
+//		if(Input.onButtonDown){
+//			//Do something
+//		}
+		
+		
+		
+		
+		
+		
+		
 		double drivePercent = 0.55;
 		if (pilotStick.getRawButton(fastBtn)) {
 			drivePercent = 1.00;
@@ -187,16 +219,7 @@ public class Robot extends IterativeRobot {
 			driveHighSole.set(false);
 		}
 	}
-		
-	}
-	
-	
-	
 
-	if(onButtonDown(shiftDnBtn)){
-		driveHighSole.set(true);
-	}
-	
 	public boolean spdCngd = false;
 	public int shootCount = 0;
 
