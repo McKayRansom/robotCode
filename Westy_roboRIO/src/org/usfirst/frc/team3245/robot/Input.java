@@ -38,6 +38,7 @@ public class Input extends Robot{
 			}
 		}
 	}
+	//tihs is a uselless comment
 	
 	public boolean isButtonDown(int button, int controller){//simply returns the value of a button from cycleUpdate each tick when used
 		return rawButtons[controller][button];
