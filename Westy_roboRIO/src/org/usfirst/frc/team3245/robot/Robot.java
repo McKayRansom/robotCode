@@ -152,14 +152,6 @@ public class Robot extends IterativeRobot {
 		//updateToggleComp();
 		updateMotors();
 	}
-
-	public static void onButtonDown(int button, int controller) {
-		
-	}
-	
-	public static void onButtonUp(int button, int controller) {
-		
-	}
 	
 	public void testInit() {
 
