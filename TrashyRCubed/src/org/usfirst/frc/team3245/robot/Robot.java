@@ -2,6 +2,8 @@
 package org.usfirst.frc.team3245.robot;
 
 import edu.wpi.first.wpilibj.*;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class Robot extends IterativeRobot {
@@ -15,16 +17,16 @@ public class Robot extends IterativeRobot {
 	
 	//myTimer autoTimer;
 	
-	private double leftSpeed, rightSpeed, drivePercent,
-	debugLeftSpeed, debugRightSpeed;
+	private double leftSpeed, rightSpeed, drivePercent, liftSpeed, liftPercent, 
+	debugLeftSpeed, debugRightSpeed, winchSpeed, winchPercent;
 	
-	private Talon leftMotor, rightMotor, 
-	occupierFront, occupierMid, occupierBack;
+	private Talon leftMotor, rightMotor, leftGrabber, rightGrabber, winch,
+	liftMotorFront, liftMotorBack, occupierFront, occupierMid, occupierBack;
 	
 	//DigitalInput outLimit, inLimit;
 	
 	Joystick pilotStick, copilotStick, winchStick, debugStick; //Because I got annoyed
-	
+ 
     public void robotInit(){
     pilotStick = new Joystick(0);
     copilotStick = new Joystick(1);
@@ -47,6 +49,7 @@ public class Robot extends IterativeRobot {
     	
     	//Driving
     	drivePercent = 0.6;
+    	liftPercent = 0.7;
     	debugLeftSpeed = 0;
     	debugRightSpeed = 0; 
     	
@@ -110,6 +113,8 @@ public class Robot extends IterativeRobot {
     public void zeroMotorSpeeds() {
     	 leftMotor.set(0);
     	 rightMotor.set(0);
+    	 liftMotorFront.set(0);
+    	 liftMotorBack.set(0);
     	 //winchMotorLeft.set(0);
     	 //winchMotorRight.set(0);
     	 //squeezeFork.set(0);
