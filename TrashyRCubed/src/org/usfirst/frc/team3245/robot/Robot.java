@@ -99,6 +99,14 @@ public class Robot extends IterativeRobot {
         	occupierMid.set(-0.2);
         }
         
+        if(copilotStick.getRawButton(3)){
+        	occupierBack.set(0.2);
+        }
+        
+        if(copilotStick.getRawButton(1)){
+        	occupierBack.set(-0.2);
+        }
+        
         
     }
     
