@@ -23,6 +23,7 @@ public class Robot extends IterativeRobot {
 	private Talon leftMotor, rightMotor, leftGrabber, rightGrabber, winch,
 	liftMotorFront, liftMotorBack, occupierFront, occupierMid, occupierBack;
 	
+	private DoubleSolenoid shooter;
 	//DigitalInput outLimit, inLimit;
 	
 	Joystick pilotStick, copilotStick, winchStick, debugStick; //Because I got annoyed
@@ -37,6 +38,7 @@ public class Robot extends IterativeRobot {
     occupierFront = new Talon(2);
     occupierMid = new Talon(3);
     occupierBack = new Talon(4);
+    shooter = new DoubleSolenoid(0, 1);
     }
     public void autonomousPeriodic() {
 
@@ -106,7 +108,12 @@ public class Robot extends IterativeRobot {
         if(copilotStick.getRawButton(1)){
         	occupierBack.set(-0.2);
         }
-        
+        if(copilotStick.getRawButton(2)){
+        	shooter.set(DoubleSolenoid.Value.kForward);
+        }
+        else{
+        	shooter.set(DoubleSolenoid.Value.kReverse);
+        }
         
     }
     
