@@ -3,7 +3,7 @@ package org.usfirst.frc.team3245.robot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Autonomous extends Robot {
-
+	//variables
 	private int time, startTime; //standard timer (incremented every period)
 	private int counter;
 	private int state; //auto state (which thing we're doing)
@@ -12,14 +12,17 @@ public class Autonomous extends Robot {
 			//bigger values will correct faster but can over correct
 			turningSpeed = .3,
 			straightSpeed = .4;
+	//get dashboard buttons to set which auto routine
 	boolean autoButton1 = SmartDashboard.getBoolean("DB/Button 0", false);
 	boolean autoButton2 = SmartDashboard.getBoolean("DB/Button 1", false);
 	boolean autoButton3 = SmartDashboard.getBoolean("DB/Button 2", false);
 	boolean autoButton4 = SmartDashboard.getBoolean("DB/Button 3", false);
+	//constants
 	private int wait = 1, drive = 2, turn = 3, shoot = 4;
+	//auto routine (currently only 1)
 	private int[][] autoSequence = { //action and time (or angle) in seconds or degrees
 		{wait, 2},
-		{turn, 90}
+		{turn, 90},
 	};
 	private int[] currentState = {};
 	public void autonomousInit() {
@@ -40,7 +43,9 @@ public class Autonomous extends Robot {
         	
     	}
     }
-    private boolean doCurrentState() { //does the current state's action returns true to move on
+    
+    //does the current state's action returns true to move on
+    private boolean doCurrentState() { 
     	int arg1 = currentState[1], arg2 = currentState[2];
     	switch(currentState[0]) {
     	case 0: return true; 
@@ -48,9 +53,10 @@ public class Autonomous extends Robot {
     	case 2: return driveStraight(arg1,arg2); 
     	case 3: return turnTo(arg1); 
     	case 4: return true; //placeholder for some sort of shooting code
-    	} return false; //should probably never get to here...
+    	} return false; //will probably never execute this...
     }
     
+    //use a Gyro's angle reading to turn the robot to a specified heading
     private boolean turnTo(double targetAngle) {
     	double angle = gyro.getAngle();
     	if (Math.abs(targetAngle-angle) > 3) { //if we are off by > 3 degrees
@@ -65,6 +71,7 @@ public class Autonomous extends Robot {
     	}
     }
     
+    //currently uses Gyro to keep the robot going straight forward. Should work better with encoders
     private boolean driveStraight(double startAngle, int duration) {
     	if (duration > (time - startTime)) {
     		return true;
@@ -80,6 +87,8 @@ public class Autonomous extends Robot {
     	setDrive(straightSpeed * rightAdjust, straightSpeed * leftAdjust);
     	return false;
     }
+    
+    //Wait or sleep function basically
     public boolean doNothing(int duration) {
     	if (duration > (time - startTime)) {
     		return true;

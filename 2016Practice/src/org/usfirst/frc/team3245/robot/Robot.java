@@ -5,8 +5,8 @@ public class Robot extends IterativeRobot {
 	// Buttons
 	int leftStick = 2, rightStick = 4, fastBtn = 8, slowBtn = 7;
 	// Motors!
-	private Talon leftMotor1, leftMotor2, leftMotor3, rightMotor1, rightMotor2,
-			rightMotor3, shootMotor1, shootMotor2, floorMotor;
+	private Talon leftMotor1, leftMotor2, rightMotor1, rightMotor2;
+			//unused rightMotor3, shootMotor1, shootMotor2, floorMotor, leftMotor3;
 	protected Gyro gyro;
 	// Current Motor Speeds!
 	double leftSpeed, rightSpeed, shootSpeed1, shootSpeed2, floorSpeed;
@@ -24,17 +24,16 @@ public class Robot extends IterativeRobot {
 		leftMotor1 = new Talon(0);
 		leftMotor2 = new Talon(1);
 		//leftMotor3 = new Talon(2);
-		shootMotor1 = new Talon(6);
-		shootMotor2 = new Talon(7);
-		floorMotor = new Talon(8);
+		//shootMotor1 = new Talon(6);
+		//shootMotor2 = new Talon(7);
+		//floorMotor = new Talon(8);
 		
 		// Joysticks!
 		pilotStick = new Input(0);
 		coPilotStick = new Input(1);
-
+		
 		// Compressor!
 		//mainComp = new Compressor(0);
-
 	}
 	
 	public void setDrive(double right, double left) {
@@ -45,5 +44,4 @@ public class Robot extends IterativeRobot {
 		rightMotor2.set(right);
 		//rightMotor3.set(right);
 	}
-
 }

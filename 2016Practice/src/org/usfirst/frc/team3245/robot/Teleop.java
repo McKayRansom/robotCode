@@ -10,7 +10,6 @@ public class Teleop extends Robot{
     public void teleopPeriodic() {
     	SmartDashboard.putString("DB/String 0", Double.toString(gyro.getAngle()));
     	//mainComp.setClosedLoopControl(true);
-		
 		updateDrive();
     }
 	public void updateDrive() {
