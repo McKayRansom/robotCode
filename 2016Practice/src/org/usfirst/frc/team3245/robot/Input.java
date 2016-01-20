@@ -27,11 +27,12 @@ public class Input {
 		
 		
 	}
-	public boolean isButtonDown(int button){
+	public boolean getRawButton(int button){
 		return rawButtons[button];
 	}
-//	public boolean setOnButtonDown(int button, ) {
-//		return false;
-//	}
+	
+	public double getRawAxis(int axis) {
+		return controller.getRawAxis(axis);
+	}
 	
 }
