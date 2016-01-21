@@ -21,6 +21,12 @@ public class Input{
 			rawButtons[i] = value;
 		}
 	}
+	public double[] getRawAxes(){
+		double[] axisValues = new double[2];
+		axisValues[1] = controller.getRawAxis(1);
+		axisValues[2] = controller.getRawAxis(3);
+		return axisValues;
+	}
 	
 	public boolean isButtonDown(int button){//simply returns the value of a button from cycleUpdate each tick when used
 		return rawButtons[button];

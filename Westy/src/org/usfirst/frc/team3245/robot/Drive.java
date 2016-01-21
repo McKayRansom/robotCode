@@ -7,36 +7,17 @@ public class Drive {
 	Talon[] leftDrive;
 	Talon[] rightDrive;
 	
-	public Drive(Input controller, boolean shifting, int motorNumber){
+	public Drive(Input controller, int motorNumber){
 		driveController = controller;
-		if(motorNumber==2){
-			leftDrive = new Talon[1];
-			leftDrive[1] = new Talon(0);
-			rightDrive = new Talon[1];
-			rightDrive[1] = new Talon(1);
-		}
-		else if(motorNumber==4){
-			leftDrive = new Talon[2];
-			leftDrive[1] = new Talon(0);
-			leftDrive[2] = new Talon(1);
-			rightDrive = new Talon[2];
-			rightDrive[1] = new Talon(2);
-			rightDrive[2] = new Talon(3);
-		}
-		else if(motorNumber==4){
-			leftDrive = new Talon[3];
-			for(int i=0; i<=2; i++)
-				leftDrive[i] = new Talon(i);
-			
-			rightDrive = new Talon[2];
-			for(int i=3; i<=5; i++){
-				rightDrive[i] = new Talon(i);
-			}
-		}
+		defineMotors(motorNumber);
 		
 	}
 	public void tankDrive(){
-		
+		double leftAxis = driveController.getRawAxes()[1];
+		double rightAxis = driveController.getRawAxes()[2];
+		for(Talon mc : leftDrive){
+			
+		}
 	}
 	
 	private void defineMotors(int number){ //Defines the motors in the constructor according to the number of motors
