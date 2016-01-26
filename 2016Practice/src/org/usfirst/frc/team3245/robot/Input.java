@@ -26,7 +26,7 @@ public class Input {
 //		}
 //	}
 	public boolean getRawButton(int button){
-		return rawButtons[button];
+		return controller.getRawButton(button);
 	}
 	
 	public double getRawAxis(int axis) {

@@ -1,47 +1,68 @@
+//base class: contains all output objects and base code
+//also contains basic helpers like setDrive()
 package org.usfirst.frc.team3245.robot;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 public class Robot extends IterativeRobot {
-	// Buttons
-	int leftStick = 2, rightStick = 4, fastBtn = 8, slowBtn = 7;
+
 	// Motors!
-	private Talon leftMotor1, leftMotor2, rightMotor1, rightMotor2;
+	private static Talon leftMotor1, leftMotor2, leftMotor3, rightMotor1, rightMotor2, rightMotor3;
 			//unused rightMotor3, shootMotor1, shootMotor2, floorMotor, leftMotor3;
-	protected Gyro gyro;
+	public static Gyro gyro;
 	// Current Motor Speeds!
-	double leftSpeed, rightSpeed, shootSpeed1, shootSpeed2, floorSpeed;
-	// Controllers!
-	Input pilotStick, coPilotStick;
+	public static double leftSpeed, rightSpeed, shootSpeed1, shootSpeed2, floorSpeed;
+	Teleop tele;
+	Autonomous auto;
 	// Compressor!
 	//Compressor mainComp;
 	public void robotInit() {
 		// Motors!
 		gyro = new AnalogGyro(1);
-		gyro.reset();
-		rightMotor1 = new Talon(3);
-		rightMotor2 = new Talon(4);
-		//rightMotor3 = new Talon(5);
-		leftMotor1 = new Talon(0);
-		leftMotor2 = new Talon(1);
-		//leftMotor3 = new Talon(2);
+		gyro.calibrate();
+		rightMotor1 = new Talon(0);
+		rightMotor2 = new Talon(1);
+		rightMotor3 = new Talon(2);
+		leftMotor1 = new Talon(3);
+		leftMotor2 = new Talon(4);
+		leftMotor3 = new Talon(5);
 		//shootMotor1 = new Talon(6);
 		//shootMotor2 = new Talon(7);
 		//floorMotor = new Talon(8);
 		
 		// Joysticks!
-		pilotStick = new Input(0);
-		coPilotStick = new Input(1);
+		//pilotStick = new Joystick(0);
+		//coPilotStick = new Joystick(1);
 		
 		// Compressor!
 		//mainComp = new Compressor(0);
 	}
+	public void teleopInit() {
+		//gyro.calibrate();
+		gyro.reset();
+		tele = new Teleop();
+	}
 	
-	public void setDrive(double right, double left) {
-		leftMotor1.set(left);
-		leftMotor2.set(left);
-		//leftMotor3.set(left);
+    public void teleopPeriodic() {
+    	//SmartDashboard.putString("DB/String 0", Double.toString(gyro.getAngle()));
+    	//mainComp.setClosedLoopControl(true);
+		tele.periodic();
+		setDrive(rightSpeed, leftSpeed);
+    }
+    
+    public void autonomousInit() {
+    	auto = new Autonomous();
+    }
+    
+    public void autonomousPeriodic() {
+    	auto.periodic();
+    }
+	
+	public static void setDrive(double right, double left) {
+		leftMotor1.set(-left);
+		leftMotor2.set(-left);
+		leftMotor3.set(-left);
 		rightMotor1.set(right);
 		rightMotor2.set(right);
-		//rightMotor3.set(right);
+		rightMotor3.set(right);
 	}
 }
