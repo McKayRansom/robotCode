@@ -3,6 +3,7 @@
 package org.usfirst.frc.team3245.robot;
 import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 
 	// Motors!
@@ -20,11 +21,11 @@ public class Robot extends IterativeRobot {
 		gyro = new AnalogGyro(1);
 		gyro.calibrate();
 		rightMotor1 = new Talon(0);
-		rightMotor2 = new Talon(1);
-		rightMotor3 = new Talon(2);
-		leftMotor1 = new Talon(3);
-		leftMotor2 = new Talon(4);
-		leftMotor3 = new Talon(5);
+		//rightMotor2 = new Talon(1);
+		//rightMotor3 = new Talon(2);
+		leftMotor1 = new Talon(1);
+		//leftMotor2 = new Talon(4);
+		//leftMotor3 = new Talon(5);
 		//shootMotor1 = new Talon(6);
 		//shootMotor2 = new Talon(7);
 		//floorMotor = new Talon(8);
@@ -56,13 +57,23 @@ public class Robot extends IterativeRobot {
     public void autonomousPeriodic() {
     	auto.periodic();
     }
+    
+    public void testInit() {
+    	gyro.calibrate();
+    }
+    
+    public void testPeriodic() {
+    	
+    }
 	
 	public static void setDrive(double right, double left) {
-		leftMotor1.set(-left);
-		leftMotor2.set(-left);
-		leftMotor3.set(-left);
-		rightMotor1.set(right);
-		rightMotor2.set(right);
-		rightMotor3.set(right);
+		SmartDashboard.putString("DB/String 0", Double.toString(gyro.getAngle()));
+    	SmartDashboard.putString("DB/String 1", Double.toString(gyro.getRate()));
+		leftMotor1.set(left);
+		//leftMotor2.set(left);
+		//leftMotor3.set(left);
+		rightMotor1.set(-right);
+		//rightMotor2.set(-right);
+		//rightMotor3.set(-right);
 	}
 }

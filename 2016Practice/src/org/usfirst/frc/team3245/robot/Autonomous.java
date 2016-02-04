@@ -10,10 +10,10 @@ public class Autonomous extends Robot {
 	private int counter;
 	private int state; //auto state (which thing we're doing)
 	private double leftAdjust = 1, rightAdjust = 1,
-			straightCorrection = 1, //how much the driveStraight function will try and correct
+			straightCorrection = 2, //how much the driveStraight function will try and correct
 			//bigger values will correct faster but can over correct
 			turningSpeed = .15,
-			straightSpeed = .3,
+			straightSpeed = .12,
 			startAngle;
 	//get dashboard buttons to set which auto routine
 	boolean autoButton1 = SmartDashboard.getBoolean("DB/Button 0", false);
@@ -24,10 +24,13 @@ public class Autonomous extends Robot {
 	private int wait = 1, drive = 2, turn = 3, shoot = 4;
 	//auto routine (currently only 1)
 	private int[][] autoSequence = { //action and time (or angle) in seconds or degrees
-		{wait, 10},
-		{turn, 90},
+		//{wait, 3},
+		//{turn, 172},
+		//{wait, 20},
+		//{turn, 0},
+		{drive, 50}
 	};
-	private int[] currentState = {1,10};
+	private int[] currentState = autoSequence[0];
 	public Autonomous() {
 		gyro.reset();
 		time = 0;
@@ -72,11 +75,11 @@ public class Autonomous extends Robot {
     //use a Gyro's angle reading to turn the robot to a specified heading
     private boolean turnTo(double targetAngle) {
     	double angle = gyro.getAngle();
-    	if (Math.abs(targetAngle-angle) > 3) { //if we are off by > 3 degrees
+    	if (Math.abs(targetAngle-angle) > .2) { //if we are off by > 1 degrees
     		if (targetAngle-angle > 0) {
-    			setDrive(turningSpeed, -turningSpeed);
-    		} else {
     			setDrive(-turningSpeed, turningSpeed);
+    		} else {
+    			setDrive(turningSpeed, -turningSpeed);
     		}
     		return false;
     	} else {
@@ -86,18 +89,20 @@ public class Autonomous extends Robot {
     
     //uses Gyro to keep the robot going straight forward. Should work better with encoders
     private boolean driveStraight(int duration) {
-    	if (duration > (time - startTime)) {
+    	if (duration < (time - startTime)) {
     		return true;
     	}
     	double angle = gyro.getAngle();
-    	if (angle-startAngle < 0) {
-    		leftAdjust -= straightCorrection;
-    		rightAdjust += straightCorrection;
-    	} else {
-    		leftAdjust += straightCorrection;
-    		rightAdjust -= straightCorrection;
-    	}
-    	setDrive(straightSpeed * rightAdjust, straightSpeed * leftAdjust);
+    	double offset = angle-startAngle;
+    	double adjustment = straightCorrection * (offset/90);//Math.pow(offset,2);
+    	//if (offset > 0) {
+    		leftAdjust = -adjustment;
+    		rightAdjust = adjustment;
+    	//} else {
+    		//leftAdjust = -adjustment;
+    		//rightAdjust = adjustment;
+    	//}
+    	setDrive(straightSpeed + rightAdjust, straightSpeed + leftAdjust);
     	return false;
     }
     

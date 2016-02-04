@@ -16,15 +16,19 @@ public class Input {
 		}
 		return values;
 	}
-//	public void cycleUpdate() { //not currently used...
-//		for (int i=0; i<16; i++) {
-//			boolean value = controller.getRawButton(i);
-//			if (value == rawButtons[i]) {
-//				//on toggle stuff goes here
-//			}
-//			rawButtons[i] = value;
-//		}
-//	}
+	public void cycleUpdate() { //not currently used...
+		for (int i=0; i<16; i++) {
+			rawButtons[i] = controller.getRawButton(i);;
+		}
+	}
+	
+	public boolean onButtonDown(int button) {
+		if (controller.getRawButton(button) == true && rawButtons[button] == false){
+			return true;
+		}
+		return false;
+	}
+	
 	public boolean getRawButton(int button){
 		return controller.getRawButton(button);
 	}
