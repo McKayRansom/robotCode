@@ -10,10 +10,10 @@ public class Autonomous extends Robot {
 	private int counter;
 	private int state; //auto state (which thing we're doing)
 	private double leftAdjust = 1, rightAdjust = 1,
-			straightCorrection = 2, //how much the driveStraight function will try and correct
+			straightCorrection = 1.5, //how much the driveStraight function will try and correct
 			//bigger values will correct faster but can over correct
 			turningSpeed = .15,
-			straightSpeed = .12,
+			straightSpeed = .3,
 			startAngle;
 	//get dashboard buttons to set which auto routine
 	boolean autoButton1 = SmartDashboard.getBoolean("DB/Button 0", false);
@@ -24,11 +24,13 @@ public class Autonomous extends Robot {
 	private int wait = 1, drive = 2, turn = 3, shoot = 4;
 	//auto routine (currently only 1)
 	private int[][] autoSequence = { //action and time (or angle) in seconds or degrees
-		//{wait, 3},
-		//{turn, 172},
-		//{wait, 20},
+		//{wait, 2},
+		//{turn, 175},
+		{wait, 2},
 		//{turn, 0},
-		{drive, 50}
+		{drive, 4, -1, 0},
+		{wait, 2},
+		{drive, 1, 1, 0},
 	};
 	private int[] currentState = autoSequence[0];
 	public Autonomous() {
@@ -56,8 +58,8 @@ public class Autonomous extends Robot {
     		currentState = autoSequence[state];
         	startAngle = gyro.getAngle();
     	}
-    	SmartDashboard.putString("DB/String 2", Integer.toString(currentState[0]));
-    	SmartDashboard.putString("DB/String 3", Integer.toString(time - startTime));
+    	SmartDashboard.putNumber("Current State", currentState[0]);
+    	SmartDashboard.putNumber("State Time", time - startTime);
     }
     
     //does the current state's action returns true to move on
@@ -66,7 +68,7 @@ public class Autonomous extends Robot {
     	switch(currentState[0]) {
 	    	case 0: return true; 
 	    	case 1: return doNothing(arg1); 
-	    	case 2: return driveStraight(arg1); 
+	    	case 2: return driveStraight(arg1, currentState[2], currentState[3]); 
 	    	case 3: return turnTo(arg1); 
 	    	case 4: return true; //placeholder for some sort of shooting code
     	} return false; //will probably never execute this...
@@ -77,9 +79,9 @@ public class Autonomous extends Robot {
     	double angle = gyro.getAngle();
     	if (Math.abs(targetAngle-angle) > .2) { //if we are off by > 1 degrees
     		if (targetAngle-angle > 0) {
-    			setDrive(-turningSpeed, turningSpeed);
-    		} else {
     			setDrive(turningSpeed, -turningSpeed);
+    		} else {
+    			setDrive(-turningSpeed, turningSpeed);
     		}
     		return false;
     	} else {
@@ -88,21 +90,19 @@ public class Autonomous extends Robot {
     }
     
     //uses Gyro to keep the robot going straight forward. Should work better with encoders
-    private boolean driveStraight(int duration) {
+    private boolean driveStraight(int duration, int direction, int useGyro) {
     	if (duration < (time - startTime)) {
     		return true;
     	}
     	double angle = gyro.getAngle();
-    	double offset = angle-startAngle;
-    	double adjustment = straightCorrection * (offset/90);//Math.pow(offset,2);
-    	//if (offset > 0) {
-    		leftAdjust = -adjustment;
-    		rightAdjust = adjustment;
-    	//} else {
-    		//leftAdjust = -adjustment;
-    		//rightAdjust = adjustment;
-    	//}
-    	setDrive(straightSpeed + rightAdjust, straightSpeed + leftAdjust);
+    	double offset = angle - startAngle;
+    	double adjustment = 0;
+    	if (useGyro == 1) {
+    		adjustment = straightCorrection * (offset/90) * direction;//Math.pow(offset,2);
+    	}   
+    	leftAdjust = adjustment;
+   		rightAdjust = -adjustment;
+    	setDrive((straightSpeed + rightAdjust) * direction, (straightSpeed + leftAdjust) * direction);
     	return false;
     }
     

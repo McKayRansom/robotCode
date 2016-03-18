@@ -17,13 +17,13 @@ public class Input {
 		return values;
 	}
 	public void cycleUpdate() { //not currently used...
-		for (int i=0; i<16; i++) {
-			rawButtons[i] = controller.getRawButton(i);;
+		for (int i=1; i<13; i++) {
+			rawButtons[i] = controller.getRawButton(i);
 		}
 	}
 	
 	public boolean onButtonDown(int button) {
-		if (controller.getRawButton(button) == true && rawButtons[button] == false){
+		if ((controller.getRawButton(button) == true) && (rawButtons[button] == false)){
 			return true;
 		}
 		return false;
@@ -33,8 +33,12 @@ public class Input {
 		return controller.getRawButton(button);
 	}
 	
+	public int getRawPOW(){
+		return controller.getPOV(0);
+	}
+	
 	public double getRawAxis(int axis) {
 		return controller.getRawAxis(axis);
 	}
-	
+
 }

@@ -7,8 +7,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 
 	// Motors!
-	private static Talon leftMotor1, leftMotor2, leftMotor3, rightMotor1, rightMotor2, rightMotor3;
-			//unused rightMotor3, shootMotor1, shootMotor2, floorMotor, leftMotor3;
+	private static CANTalon leftMotor1, leftMotor2, leftMotor3, rightMotor1, rightMotor2, rightMotor3;
+	private static Talon intakeMotor, armMotor, flipperMotor;//, shootMotor2, floorMotor, leftMotor3;
 	public static Gyro gyro;
 	// Current Motor Speeds!
 	public static double leftSpeed, rightSpeed, shootSpeed1, shootSpeed2, floorSpeed;
@@ -20,19 +20,16 @@ public class Robot extends IterativeRobot {
 		// Motors!
 		gyro = new AnalogGyro(1);
 		gyro.calibrate();
-		rightMotor1 = new Talon(0);
-		//rightMotor2 = new Talon(1);
-		//rightMotor3 = new Talon(2);
-		leftMotor1 = new Talon(1);
-		//leftMotor2 = new Talon(4);
-		//leftMotor3 = new Talon(5);
-		//shootMotor1 = new Talon(6);
-		//shootMotor2 = new Talon(7);
-		//floorMotor = new Talon(8);
-		
-		// Joysticks!
-		//pilotStick = new Joystick(0);
-		//coPilotStick = new Joystick(1);
+		rightMotor1 = new CANTalon(4);
+		rightMotor2 = new CANTalon(5);
+		rightMotor3 = new CANTalon(6);
+		leftMotor1 = new CANTalon(1);
+		leftMotor2 = new CANTalon(2);
+		leftMotor3 = new CANTalon(3);
+		//shootMotor1 = new Talon(0);
+		intakeMotor = new Talon(1);
+		flipperMotor = new Talon(2);
+		armMotor = new Talon(3);
 		
 		// Compressor!
 		//mainComp = new Compressor(0);
@@ -46,8 +43,9 @@ public class Robot extends IterativeRobot {
     public void teleopPeriodic() {
     	//SmartDashboard.putString("DB/String 0", Double.toString(gyro.getAngle()));
     	//mainComp.setClosedLoopControl(true);
-		tele.periodic();
-		setDrive(rightSpeed, leftSpeed);
+
+    	tele.periodic();
+		
     }
     
     public void autonomousInit() {
@@ -67,13 +65,26 @@ public class Robot extends IterativeRobot {
     }
 	
 	public static void setDrive(double right, double left) {
-		SmartDashboard.putString("DB/String 0", Double.toString(gyro.getAngle()));
-    	SmartDashboard.putString("DB/String 1", Double.toString(gyro.getRate()));
+		SmartDashboard.putNumber("Angle", gyro.getAngle());
+    	SmartDashboard.putString("Gyro", Double.toString(gyro.getAngle()));
 		leftMotor1.set(left);
-		//leftMotor2.set(left);
-		//leftMotor3.set(left);
+		leftMotor2.set(left);
+		leftMotor3.set(left);
 		rightMotor1.set(-right);
-		//rightMotor2.set(-right);
-		//rightMotor3.set(-right);
+		rightMotor2.set(-right);
+		rightMotor3.set(-right);
+	}
+	
+	public static void setArm(double speed) {
+		armMotor.set(speed);
+	}
+	
+	
+	public static void setIntake(double speed) {
+		intakeMotor.set(speed);
+	}
+	
+	public static void setFlipper(double speed) {
+		flipperMotor.set(speed);
 	}
 }
