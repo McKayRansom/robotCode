@@ -13,7 +13,7 @@ public class Autonomous extends Robot {
 			straightCorrection = 1.5, //how much the driveStraight function will try and correct
 			//bigger values will correct faster but can over correct
 			turningSpeed = .15,
-			straightSpeed = .3,
+			straightSpeed = .85,
 			startAngle;
 	//get dashboard buttons to set which auto routine
 	boolean autoButton1 = SmartDashboard.getBoolean("DB/Button 0", false);
@@ -21,24 +21,39 @@ public class Autonomous extends Robot {
 	boolean autoButton3 = SmartDashboard.getBoolean("DB/Button 2", false);
 	boolean autoButton4 = SmartDashboard.getBoolean("DB/Button 3", false);
 	//constants
-	private int wait = 1, drive = 2, turn = 3, shoot = 4;
+	private int wait = 1, drive = 2, turn = 3, shoot = 4, armDown = 5;
 	//auto routine (currently only 1)
-	private int[][] autoSequence = { //action and time (or angle) in seconds or degrees
-		//{wait, 2},
-		//{turn, 175},
+	private double autoSequence [][] = {
 		{wait, 2},
-		//{turn, 0},
-		{drive, 4, -1, 0},
-		{wait, 2},
-		{drive, 1, 1, 0},
 	};
-	private int[] currentState = autoSequence[0];
+	private double[][] forwardAndBack = { //action and time (or angle) in seconds or degrees
+		{drive, 2, -1, 0},
+		{wait, 2},
+		{drive, 1, .5, 0},
+	};
+	private double[][] forward = { //action and time (or angle) in seconds or degrees
+		{drive, 2, -1, 0},
+	};
+	private double[][] goal = { //action and time (or angle) in seconds or degrees
+		{armDown, 5, .25},
+		{drive, 4, -.5, 0},
+		{shoot},
+	};
+	private double[] currentState;
 	public Autonomous() {
+		if (SmartDashboard.getBoolean("score")) {
+			autoSequence = goal;
+		} else if (SmartDashboard.getBoolean("forwardAndBack")) {
+			autoSequence = forwardAndBack;
+		} else if (SmartDashboard.getBoolean("forward")) {
+			autoSequence = forward;
+		}
 		gyro.reset();
 		time = 0;
 		startTime = 0;
 		counter = 0;
 		state = 0;		
+		currentState = autoSequence[state];
 	}
 	
     public void periodic() {
@@ -58,19 +73,20 @@ public class Autonomous extends Robot {
     		currentState = autoSequence[state];
         	startAngle = gyro.getAngle();
     	}
-    	SmartDashboard.putNumber("Current State", currentState[0]);
+    	SmartDashboard.putNumber("Current State", (int)currentState[0]);
     	SmartDashboard.putNumber("State Time", time - startTime);
     }
     
     //does the current state's action returns true to move on
     private boolean doCurrentState() { 
-    	int arg1 = currentState[1];
-    	switch(currentState[0]) {
-	    	case 0: return true; 
-	    	case 1: return doNothing(arg1); 
-	    	case 2: return driveStraight(arg1, currentState[2], currentState[3]); 
-	    	case 3: return turnTo(arg1); 
-	    	case 4: return true; //placeholder for some sort of shooting code
+    	int action = (int)currentState[0];
+    	switch(action) {
+	    	case 0: return true;
+	    	case 1: return doNothing(currentState[1]); 
+	    	case 2: return driveStraight(currentState[1], currentState[2], currentState[3]); 
+	    	case 3: return turnTo(currentState[1]); 
+	    	case 4: return shoot();
+	    	case 5: return armDown(currentState[1], currentState[2]);
     	} return false; //will probably never execute this...
     }
     
@@ -90,7 +106,7 @@ public class Autonomous extends Robot {
     }
     
     //uses Gyro to keep the robot going straight forward. Should work better with encoders
-    private boolean driveStraight(int duration, int direction, int useGyro) {
+    private boolean driveStraight(double duration, double direction, double useGyro) {
     	if (duration < (time - startTime)) {
     		return true;
     	}
@@ -106,8 +122,31 @@ public class Autonomous extends Robot {
     	return false;
     }
     
+    public boolean armDown(double duration, double speed) {
+    	
+    	if (duration < (time - startTime)) {
+    		return true;
+    	}
+    	setArm(speed);
+    	return false;
+    }
+    public boolean shoot() {
+    	int duration = time - startTime;
+		if (duration < 20) {
+			setFlipper(1);
+		} else if (duration > 20 && duration < 40) {
+			//wait..
+		} else if( duration > 40 && duration < 90) {
+			setFlipper(-.5);
+		} else if (duration > 90){
+			setFlipper(0);
+			return true;
+		}
+    	return false;
+    }
+    
     //Wait or sleep function basically
-    public boolean doNothing(int duration) {
+    public boolean doNothing(double duration) {
     	setDrive(0,0);
     	if (duration < (time - startTime)) {
     		return true;

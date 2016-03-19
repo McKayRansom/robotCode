@@ -20,17 +20,17 @@ public class Robot extends IterativeRobot {
 		// Motors!
 		gyro = new AnalogGyro(1);
 		gyro.calibrate();
-		rightMotor1 = new CANTalon(4);
-		rightMotor2 = new CANTalon(5);
-		rightMotor3 = new CANTalon(6);
-		leftMotor1 = new CANTalon(1);
-		leftMotor2 = new CANTalon(2);
-		leftMotor3 = new CANTalon(3);
+		rightMotor1 = new CANTalon(1);
+		rightMotor2 = new CANTalon(2);
+		rightMotor3 = new CANTalon(3);
+		leftMotor1 = new CANTalon(4);
+		leftMotor2 = new CANTalon(5);
+		leftMotor3 = new CANTalon(6);
 		//shootMotor1 = new Talon(0);
 		intakeMotor = new Talon(1);
-		flipperMotor = new Talon(2);
-		armMotor = new Talon(3);
-		
+		flipperMotor = new Talon(0);
+		armMotor = new Talon(2);
+		CameraServer.getInstance().startAutomaticCapture("axis-camera");
 		// Compressor!
 		//mainComp = new Compressor(0);
 	}

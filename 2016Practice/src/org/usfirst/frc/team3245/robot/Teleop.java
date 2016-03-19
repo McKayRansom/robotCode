@@ -10,8 +10,8 @@ public class Teleop extends Robot{
 	Input pilotStick, coPilotStick;
 	int flipperToggle = -1;
 	// Buttons
-	int leftStick = 1, rightStick = 3, fastBtn = 6, slowBtn = 5, switchButton = 11, downBtn = 7,
-			upBtn = 8, shooterIn = 6, shooterOut = 5;
+	int leftStick = 1, rightStick = 3, fastBtn = 6, slowBtn = 5, switchButton = 11, downBtn = 3,
+			upBtn = 1, shooterIn = 6, shooterOut = 5;
 	boolean switchDrive = false;
 	public Teleop() { //init
 		pilotStick = new Input(0);
@@ -21,33 +21,24 @@ public class Teleop extends Robot{
 	
 	public void periodic() { 
     	//mainComp.setClosedLoopControl(true);
-		coPilotStick.cycleUpdate();
-		pilotStick.cycleUpdate();
 		updateDrive();
 		updateShooter();
+		coPilotStick.cycleUpdate();
+		pilotStick.cycleUpdate();
     }
 	
 	private void updateShooter() {
 		int angle = coPilotStick.getRawPOW();
 		SmartDashboard.putNumber("POV", angle);
 		if (angle == 0) {
-			setArm(0.6);
+			setIntake(0.6);
 		} else if (angle == 180) {
-			setArm(-0.6);
+			setIntake(-0.6);
 		} else {
-			setArm(0);
+			setIntake(0);
 		}
-		if (coPilotStick.onButtonDown(2)) {
-			flipperToggle = 1;
-		}
-		if (flipperToggle > 1) {
-			setFlipper(1);
-		} else if (flipperToggle > 30) {
-			setFlipper(-1);
-		} else if (flipperToggle > 60) {
-			setFlipper(0);
-			flipperToggle = -1;
-		}
+		SmartDashboard.putNumber("flipper", flipperToggle);
+		
 		if (coPilotStick.getRawButton(upBtn)) { //Buttons start at 1
 			setFlipper(1);
 		} else if (coPilotStick.getRawButton(downBtn)) {
@@ -55,13 +46,30 @@ public class Teleop extends Robot{
 		}
 		else{setFlipper(0);}
 		
+		if (coPilotStick.onButtonDown(2)) {
+			flipperToggle = 1;
+		}
+		if (flipperToggle > 0) {
+			flipperToggle++;
+			if (flipperToggle < 20) {
+				setFlipper(1);
+			} else if (flipperToggle > 20 && flipperToggle < 40) {
+				//wait..
+			} else if( flipperToggle > 40 && flipperToggle < 90) {
+				setFlipper(-.5);
+			} else if (flipperToggle > 90){
+				setFlipper(0);
+				flipperToggle = -1;
+			}
+		}
+		
 		if (coPilotStick.getRawButton(shooterIn)) {
-			setIntake(1);
+			setArm(1);
 		} else if (coPilotStick.getRawButton(shooterOut)) {
-			setIntake(-1);
+			setArm(-1);
 		}
 		else{
-			setIntake(0);
+			setArm(0);
 		}
 	}
 	
@@ -76,7 +84,7 @@ public class Teleop extends Robot{
 			drivePercent = 0.3;
 		}
 		if (pilotStick.onButtonDown(switchButton)) {
-			switchDrive = true;
+			switchDrive = !switchDrive;
 		}
 		if (switchDrive == true) {
 			drivePercent*=-1;
